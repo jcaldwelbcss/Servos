@@ -1,0 +1,30 @@
+#include <Servo.h>
+
+const int SERVO = 9; //servo is controlled through pin 9
+const int POT = 0; //the potentiometer wiper is connected to pin 0
+
+
+Servo myServo;
+int val = 0; //this makes the initial value of the integer 0
+
+
+void setup()
+{
+  myServo.attach(SERVO);
+  Serial.begin(9600); //this starts the serial monitor with a baud rate of 9600, which is standard for an arduino
+  pinMode(2, INPUT); //this sets digital pin 2 as an input to read the signal being sent to the servo
+}
+
+void loop()
+{
+  val = analogRead(POT); //reads the value from the pot
+  val = map(val, 0, 1023, 0, 180); //changes the pot value to a degree
+  long pulseWidth = pulseIn(2, HIGH); //reads the PWM signal from pin 9 to servo
+  Serial.print("Servo: "); //prints the words
+  Serial.println(pulseWidth); //prints that value
+  myServo.write(val); //sends the value from line 21 to the servo
+  Serial.print("Pot:"); //prints the words
+  Serial.println(val); //prints that value
+
+  delay(15);
+}
