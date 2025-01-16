@@ -12,14 +12,14 @@ void setup()
 {
   myServo.attach(SERVO);
   Serial.begin(9600); //this starts the serial monitor with a baud rate of 9600, which is standard for an arduino
-  pinMode(2, INPUT); //this sets digital pin 2 as an input to read the signal being sent to the servo
+  pinMode(6, INPUT); //this sets digital pin 2 as an input to read the signal being sent to the servo
 }
 
 void loop()
 {
   val = analogRead(POT); //reads the value from the pot
   val = map(val, 0, 1023, 0, 180); //changes the pot value to a degree
-  long pulseWidth = pulseIn(2, HIGH); //reads the PWM signal from pin 9 to servo
+  long pulseWidth = pulseIn(6, HIGH); //reads the PWM signal from pin 9 to servo
   Serial.print("Servo: "); //prints the words
   Serial.println(pulseWidth); //prints that value
   myServo.write(val); //sends the value from line 21 to the servo
