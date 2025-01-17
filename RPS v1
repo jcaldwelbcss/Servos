@@ -1,0 +1,87 @@
+#include <Servo.h>
+
+// Define servo objects
+Servo rockServo;
+Servo paperServo;
+Servo scissorsServo;
+
+// Pin Definitions
+const int sensorPin = 2;        // Input pin for the sensor (button/proximity sensor)
+const int rockServoPin = 3;     // PWM pin for the "Rock" servo
+const int paperServoPin = 5;    // PWM pin for the "Paper" servo
+const int scissorsServoPin = 6; // PWM pin for the "Scissors" servo
+
+int programChoice = -1;         // Store the program's choice
+bool sensorTriggered = false;   // Flag for sensor detection
+
+void setup() {
+    // Attach servos
+    rockServo.attach(rockServoPin);
+    paperServo.attach(paperServoPin);
+    scissorsServo.attach(scissorsServoPin);
+
+    // Initialize sensor pin
+    pinMode(sensorPin, INPUT_PULLUP); // Use internal pull-up resistor if it's a button
+    attachInterrupt(digitalPinToInterrupt(sensorPin), sensorInterrupt, FALLING);
+
+    // Initial Servo positions
+    resetServos();
+
+    // Start Serial for debugging (optional)
+    Serial.begin(9600);
+}
+
+void loop() {
+    if (sensorTriggered) {
+        // Generate a random choice (0: Rock, 1: Paper, 2: Scissors)
+        programChoice = random(0, 3);
+
+        Serial.print("Program's Choice: ");
+        switch (programChoice) {
+            case 0: 
+                Serial.println("Rock");
+                activateRock();
+                break;
+            case 1: 
+                Serial.println("Paper");
+                activatePaper();
+                break;
+            case 2: 
+                Serial.println("Scissors");
+                activateScissors();
+                break;
+        }
+
+        // Reset flag
+        sensorTriggered = false;
+
+        // Wait before resetting the servos
+        delay(1000);
+        resetServos();
+    }
+}
+
+// Interrupt service routine (ISR) for the sensor
+void sensorInterrupt() {
+    sensorTriggered = true;
+}
+
+// Function to reset all servos to idle position
+void resetServos() {
+    rockServo.write(0);      // Move rock servo to idle position
+    paperServo.write(0);     // Move paper servo to idle position
+    scissorsServo.write(0);  // Move scissors servo to idle position
+}
+
+// Functions to activate specific choices
+void activateRock() {
+    rockServo.write(90);    // Move rock servo to active position
+}
+
+void activatePaper() {
+    paperServo.write(90);   // Move paper servo to active position
+}
+
+void activateScissors() {
+    scissorsServo.write(90); // Move scissors servo to active position
+}
