@@ -1,0 +1,106 @@
+const int startButtonPin = 2;  // Pin for start button
+const int rockButtonPin = 3;  // Pin for player's "Rock" button
+const int paperButtonPin = 4; // Pin for player's "Paper" button
+const int scissorsButtonPin = 5; // Pin for player's "Scissors" button
+
+int programChoice = -1;       // Program's choice (0: Rock, 1: Paper, 2: Scissors)
+int playerChoice = -1;        // Player's choice
+bool startGame = false;       // Flag to indicate game start
+
+void setup() {
+    pinMode(startButtonPin, INPUT_PULLUP);   // Start button with pull-up
+    pinMode(rockButtonPin, INPUT_PULLUP);   // Player rock button with pull-up
+    pinMode(paperButtonPin, INPUT_PULLUP);  // Player paper button with pull-up
+    pinMode(scissorsButtonPin, INPUT_PULLUP); // Player scissors button with pull-up
+
+    attachInterrupt(digitalPinToInterrupt(startButtonPin), startGameISR, FALLING);
+
+    Serial.begin(9600); // Start Serial communication for debugging
+    Serial.println("Press the start button to begin!");
+}
+
+void loop() {
+    if (startGame) {
+        // Program selects its choice
+        programChoice = random(0, 3); // Randomly choose 0, 1, or 2
+        displayProgramChoice();      // Display program choice (hidden to player)
+
+        Serial.println("Make your choice: Rock, Paper, or Scissors!");
+        Serial.println("You have 10 seconds.");
+
+        // Wait for the player to make a choice within 10 seconds
+        unsigned long startTime = millis();
+        playerChoice = getPlayerChoice(startTime, 10000); // 10-second window
+
+        // Compare choices and determine the winner
+        if (playerChoice != -1) {
+            determineWinner();
+        } else {
+            Serial.println("Time ran out! Program wins by default.");
+        }
+
+        // Reset game state
+        startGame = false;
+        playerChoice = -1;
+        programChoice = -1;
+        Serial.println("\nPress the start button to play again.");
+    }
+}
+
+void startGameISR() {
+    startGame = true;
+}
+
+// Function to display program's choice
+void displayProgramChoice() {
+    // Uncomment for testing; otherwise, keep it hidden
+    // Serial.print("Program's choice is (hidden): ");
+    // Serial.println(programChoice);
+}
+
+// Function to read player's choice
+int getPlayerChoice(unsigned long startTime, unsigned long timeout) {
+    while (millis() - startTime < timeout) {
+        if (digitalRead(rockButtonPin) == LOW) {
+            return 0; // Rock
+        } else if (digitalRead(paperButtonPin) == LOW) {
+            return 1; // Paper
+        } else if (digitalRead(scissorsButtonPin) == LOW) {
+            return 2; // Scissors
+        }
+    }
+    return -1; // No choice made
+}
+
+// Function to determine the winner
+void determineWinner() {
+    Serial.print("Program's choice: ");
+    printChoice(programChoice);
+    Serial.print("Player's choice: ");
+    printChoice(playerChoice);
+
+    if (programChoice == playerChoice) {
+        Serial.println("It's a tie!");
+    } else if ((programChoice == 0 && playerChoice == 2) || // Rock beats Scissors
+               (programChoice == 1 && playerChoice == 0) || // Paper beats Rock
+               (programChoice == 2 && playerChoice == 1)) { // Scissors beats Paper
+        Serial.println("Program wins!");
+    } else {
+        Serial.println("Player wins!");
+    }
+}
+
+// Function to print choice in text form
+void printChoice(int choice) {
+    switch (choice) {
+        case 0:
+            Serial.println("Rock");
+            break;
+        case 1:
+            Serial.println("Paper");
+            break;
+        case 2:
+            Serial.println("Scissors");
+            break;
+    }
+}
