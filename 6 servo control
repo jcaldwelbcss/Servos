@@ -1,0 +1,59 @@
+#include <Servo.h> //this is still work in progress
+
+//naming servos
+Servo servo1; 
+Servo servo2;
+Servo servo3;
+Servo servo4;
+Servo servo5;
+Servo servo6;
+
+//giving initial servo values
+int servo1pos = 0;
+int servo2pos = 0;
+int servo3pos = 0;
+int servo4pos = 0;
+int servo5pos = 0;
+int servo6pos = 0;
+
+//connecting servos to pins
+void setup() {
+ servo1.attach(3);
+ servo2.attach(5);
+ servo3.attach(6);
+ servo4.attach(9);
+ servo5.attach(10);
+ servo6.attach(11);
+
+ //beginning the serial monitor
+Serial.begin(9600);
+}
+
+void loop()
+{
+  for (servo1pos = 0; servo1pos <= 180; servo1pos +=1)  {
+  servo1.write(servo1pos);
+  delay(15);
+  }
+for (servo2pos = 0; servo2pos <= 180; servo2pos +=10)  {
+  servo2.write(servo2pos);
+    delay(150);
+  }
+  for (servo3pos = 0; servo3pos <= 180; servo3pos +=25)  {
+  servo3.write(servo3pos);
+    delay(200);
+  }
+  
+  for (servo4pos = 0; servo4pos <= 180; servo4pos +=10)  {
+  servo4.write(servo4pos);
+    delay(50);
+  }
+  for (servo5pos = 0; servo5pos <= 180; servo5pos +=15)  {
+  servo5.write(servo5pos);
+    delay(75);
+  }
+  for (servo6pos = 0; servo6pos <= 180; servo6pos +=10)  {
+  servo6.write(servo6pos);
+    delay(15);
+  }
+}
