@@ -1,20 +1,20 @@
 #include <Servo.h>
 
-const int SERVO = 9;
+const int SERVO = 9; //not needed, why int your servo when it is already given a value with myservo.attach ();
 const int POT = 0;
 
-Servo myServo;
+Servo myservo;
 int val = 0;
 
 void setup()
 {
-  myServo.attach(SERVO);
+  myservo.attach(SERVO);
 }
 
 void loop()
 {
   val = analogRead(POT);
   val = map(val, 0, 1023, 0, 180);
-  myServo.write(val);
+  myservo.write(val);
   delay(15);
 }
