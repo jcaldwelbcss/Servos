@@ -2,7 +2,7 @@
 #include<Servo.h>
 Servo myservo;
 int pos = 0;
-int i = 0;
+
 
 void setup(){
 Serial.begin(9600);
@@ -10,13 +10,26 @@ myservo.attach(9);
 }
 
 void loop(){
-if(Serial.available()>0)
+if (Serial.available())
 {
-int pos = Serial.read();
-if(pos =='i')
+int pos = Serial.parsInt();
+if(pos < 10)
 {
-myservo.write(i)
+Serial.print(">");
+Serial.println(pos);
+Serial.println("Cannot execute command, value too low");
 }
+if (pos >= 10 && pos < 170)
+{
+Serial.print("> ")l
+Serial.println(pos);
+Serial.print("turning servo to ");
+Serial.print(pos);
+Serial.println(" degrees");
+myservo.write(pos);
+}
+
+
 }
 
 }
